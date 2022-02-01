@@ -4,16 +4,18 @@ const bodyParser = require('body-parser')
 
 const MongoClient = require('mongodb').MongoClient
 
-const app = express
+const app = express()
 
 app.use(bodyParser.urlencoded({extended : true}))
 
-const connectionstring = "mongodb+srv://murali9440:Pavithra123@cluster0.ubv1q.mongodb.net/myFirstDatabase?retryWrites=true&w=majority"
+const connectionstring = "mongodb+srv://murali94409:murali1234@cluster0.ubv1q.mongodb.net/myFirstDatabase?retryWrites=true&w=majority"
 
-MongoClient.connect(mconnectionstring,{useunifiedtopology: true})
- .then(client =>{
+MongoClient.connect(connectionstring,{useunifiedtopology:true})
+ .then(client => {
      console.log('connected to database')
+
      const db = client.db('star-war-quotes')
+
      const quotesCollection = db.collection('quotes')
 
      //post data
@@ -27,13 +29,12 @@ MongoClient.connect(mconnectionstring,{useunifiedtopology: true})
 
     //get data
     app.get('/getall',(req,res)=>{
-        db.collection('quotes').find().toArray()
-         .then(result=>{
-             
-           res.render('index.ejs',{quotes:result})
-         })
-        .catch(error=>console.error(error))
-       })
+        quotesCollection.find().toArray()
+        .then(result=>{
+            console.log(result)
+        })     
+          .catch(error=>console.log(error))
+    })
 
 
 }).catch(console.error)
@@ -42,8 +43,8 @@ app.get('/',(req,res)=>{
     res.sendFile(__dirname + '/index.html')
 })
 
-const PORT = 5000
+const PORT = 3000
 
-app.listen(PORT,()=>{
-    console.log(`server running at port ${PORT}`)
+app.listen(PORT,(res,req) => {
+    console.log(`server running at port: ${PORT}`)
 })
